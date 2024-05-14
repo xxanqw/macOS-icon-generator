@@ -32,7 +32,6 @@ class MainWindow(QMainWindow):
 
         # Load the overlay image
         self.overlay_image_path = p.dirname(p.abspath(__file__)) + "/../img/default.png"
-        print(self.overlay_image_path)
         overlay_image = QPixmap(self.overlay_image_path)
         overlay_image = overlay_image.scaled(150, 150)
 
@@ -75,7 +74,11 @@ class MainWindow(QMainWindow):
 
     def dropEvent(self, event):
         img_path = event.mimeData().urls()[0].toLocalFile()
-        self.load_image(img_path)
+        # Check if the dropped file is an image
+        if img_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+            self.load_image(img_path)
+        else:
+            self.show_message_box("Invalid File", "Please drop a valid image file.\n(.png, .jpg, .jpeg, .bmp)", QMessageBox.Icon.Warning)
         event.acceptProposedAction()
 
     def load_image(self, path):
